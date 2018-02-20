@@ -1414,7 +1414,7 @@ ifeq ("$(PYTHON_SUPPORT)","true")
 # Libraries needed for the run-time (i.e., excluding test binaries)
 # TODO MPI doesn't appear explicitly here, hidden by mpic++ usage (but currently, it should be user installed)
 PYTHON_LIBS_LIST := $(LIBS_LIST) $(IMAGEREADER_LIBS_LIST)
-PYTHON_LIBS_EXCLUDE_LIST := m pthread nvidia-ml
+PYTHON_LIBS_EXCLUDE_LIST := m pthread nvidia-ml cublas cudart curand cusparse cuda cudnn opencv_core opencv_imgproc opencv_imgcodecs mklml_intel mkldnn iomp5 nccl
 PYTHON_EXTRA_LIBS_BASENAMES:=$(addsuffix .so,$(addprefix lib,$(filter-out $(PYTHON_LIBS_EXCLUDE_LIST),$(PYTHON_LIBS_LIST))))
 
 # TODO dependencies

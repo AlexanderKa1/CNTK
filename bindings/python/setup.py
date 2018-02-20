@@ -96,6 +96,13 @@ if not "--with-deps" in sys.argv or "--without-deps" in sys.argv:
         EXCLUDE_RT_LIBS += ["opencv_world"] # OpenCV
         EXCLUDE_RT_LIBS += ["mkldnn", "mklml", "libiomp5md"] # MKL + MKL-DNN
         EXCLUDE_RT_LIBS += ["nvml"] # NVML (Nvidia driver)
+    else:
+        EXCLUDE_RT_LIBS_SUFFIX = ".so[0-9\.]*"
+        EXCLUDE_RT_LIBS += ["libcudart", "libcublas", "libcurand", "libcusparse", "libcuda", "libnvidia-ml"] # CUDA
+        EXCLUDE_RT_LIBS += ["libcudnn"] # CUDNN
+        EXCLUDE_RT_LIBS += ["libopencv_core", "libopencv_imgproc", "libopencv_imgcodecs"] # OpenCV
+        EXCLUDE_RT_LIBS += ["libmklml_intel", "libiomp5" "libmkldnn"] # MKL
+        EXCLUDE_RT_LIBS += ["libnccl"] # NCCL
 
 for fn in rt_libs_all:
     exclude=False
@@ -117,11 +124,11 @@ os.mkdir(PROJ_LIB_PATH)
 for fn in rt_libs:
     src_file = lib_path(fn)
     tgt_file = proj_lib_path(fn)
-    shutil.copy(src_file, tgt_file)
+    os.system('strip -s %s -o %s' % (src_file, tgt_file))
 
 if 'CNTK_EXTRA_LIBRARIES' in os.environ:
     for lib in os.environ['CNTK_EXTRA_LIBRARIES'].split():
-        shutil.copy(lib, PROJ_LIB_PATH)
+        os.system('strip -s %s -o %s' % (lib, os.path.join(PROJ_LIB_PATH, lib)))
         rt_libs.append(strip_path(lib))
 
 # For package_data we need to have names relative to the cntk module.
